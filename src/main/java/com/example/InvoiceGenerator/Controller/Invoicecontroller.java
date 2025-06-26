@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,6 +34,18 @@ public class Invoicecontroller {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Invoices not found");
+        }
+    }
+
+    @PostMapping
+    ResponseEntity<?> createinvoice(@RequestBody InvoiceDTO invoiceDTO) {
+        try {
+            InvoiceDTO created = invoiceService.createinvoice(invoiceDTO);
+            return ResponseEntity.ok(created);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating invoice: " + e.getMessage());
         }
     }
 
