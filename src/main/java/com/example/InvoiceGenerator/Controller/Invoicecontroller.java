@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/Invoice")
 public class Invoicecontroller {
@@ -52,6 +53,21 @@ public class Invoicecontroller {
                     .body("Error creating invoice: " + e.getMessage());
         }
     }
+
+    @GetMapping("/{id}/view")
+public ResponseEntity<ByteArrayResource> viewPdf(@PathVariable int id) {
+    byte[] pdfFile = invoiceService.downloadedpdf(id);
+    if (pdfFile == null || pdfFile.length == 0) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    
+    return ResponseEntity.ok()
+            // Notice: NO Content-Disposition header here
+            .contentType(MediaType.APPLICATION_PDF)
+            .contentLength(pdfFile.length)
+            .body(new ByteArrayResource(pdfFile));
+}
+    
 
     @GetMapping("/{id}/pdf")
     public ResponseEntity<ByteArrayResource> downloadpdf(@PathVariable int id)  {
