@@ -54,17 +54,18 @@ public class Invoicecontroller {
     }
 
     @GetMapping("/{id}/pdf")
-    public ResponseEntity<FileSystemResource> downloadpdf(@PathVariable int id)  {
+    public ResponseEntity<ByteArrayResource> downloadpdf(@PathVariable int id)  {
 
-        File pdfFile = invoiceService.downloadedpdf(id);
-        if (pdfFile == null || !pdfFile.exists()) {
+        byte[] pdfFile = invoiceService.downloadedpdf(id);
+        if (pdfFile == null || pdfFile.length==0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .build();
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(new FileSystemResource(pdfFile));
+                .contentLength(pdfFile.length)
+                .body(new ByteArrayResource(pdfFile));
     }
 
 }

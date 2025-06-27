@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Create Invoice')"></head>
+<body>
+    <nav th:replace="fragments/layout :: navbar"></nav>
+    
+    <div class="container">
+        <h2 class="mb-4">Create New Invoice</h2>
+        
+        <div class="card">
+            <div class="card-body">
+                <form id="invoiceForm" method="post">
+                    <!-- Customer Information -->
+                    <div class="mb-4">
+                        <h5 class="mb-3">Customer Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Customer Name*</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address*</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Invoice Items -->
+                    <h5 class="mb-3">Invoice Items</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="itemsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Item Description*</th>
+                                    <th style="width:100px">Quantity*</th>
+                                    <th style="width:150px">Unit Price (₹)*</th>
+                                    <th style="width:120px">Discount (%)</th>
+                                    <th style="width:150px">Total (₹)</th>
+                                    <th style="width:70px">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="item-row">
+                                    <td>
+                                        <input type="text" class="form-control item-name" name="items[0].itemName" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control item-quantity" name="items[0].quantity" value="1" min="1" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control item-price" name="items[0].unitPrice" value="0" min="0" step="0.01" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control item-discount" name="items[0].discount" value="0" min="0" max="100">
+                                    </td>
+                                    <td>
+                                        <span class="item-total">0.00</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-danger delete-row" disabled>×</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <button type="button" id="addRow" class="btn btn-sm btn-outline-primary">
+                            + Add Item
+                        </button>
+                    </div>
+                    
+                    <!-- Total Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 ms-auto">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5>Grand Total:</h5>
+                                        <h5>₹<span id="grandTotal">0.00</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-end">
+                        <a href="/" class="btn btn-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="submitInvoice">Create & Email Invoice</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="fragments/layout :: footer"></footer>
+    <script th:src="@{/js/invoice-form.js}"></script>
+</body>
+</html>
