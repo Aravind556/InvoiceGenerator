@@ -5,21 +5,25 @@ import com.example.InvoiceGenerator.Dto.InvoiceDTO;
 import com.example.InvoiceGenerator.Entity.Invoice;
 import com.example.InvoiceGenerator.Service.Implements.InvoiceServiceImp;
 import com.example.InvoiceGenerator.Service.InvoiceService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/Invoice")
+@RestController
+@RequestMapping("/Invoice")
 public class Invoicecontroller {
 
-    @Autowired
+
     private final InvoiceServiceImp invoiceService;
 
     public Invoicecontroller(InvoiceServiceImp invoiceService) {
@@ -40,13 +44,27 @@ public class Invoicecontroller {
     @PostMapping
     ResponseEntity<?> createinvoice(@RequestBody InvoiceDTO invoiceDTO) {
         try {
-            InvoiceDTO created = invoiceService.createinvoice(invoiceDTO);
+            InvoiceDTO created = invoiceService.createinvoiceandmail(invoiceDTO);
             return ResponseEntity.ok(created);
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating invoice: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<FileSystemResource> downloadpdf(@PathVariable int id)  {
+
+        File pdfFile = invoiceService.downloadedpdf(id);
+        if (pdfFile == null || !pdfFile.exists()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new FileSystemResource(pdfFile));
     }
 
 }

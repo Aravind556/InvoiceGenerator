@@ -2,12 +2,13 @@ package com.example.InvoiceGenerator.Service;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
+
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.*;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+
 
 @Service
 public class EmailService {
@@ -15,14 +16,14 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendInvoiceEmail(String to, File pdfFile) throws Exception {
+    public void sendInvoiceEmail(String emailid, byte[] pdfFile) throws Exception {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setTo(to);
+        helper.setTo(emailid);
         helper.setSubject("Your Invoice");
         helper.setText("Please find your invoice attached.");
-        helper.addAttachment("invoice.pdf", new FileSystemResource(pdfFile));
+        helper.addAttachment("invoice.pdf", new ByteArrayResource(pdfFile));
 
         mailSender.send(message);
     }

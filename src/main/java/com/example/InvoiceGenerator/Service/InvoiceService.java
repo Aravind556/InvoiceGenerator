@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface InvoiceService {
 
     Optional<List<InvoiceDTO>> getallinvoices();
-    InvoiceDTO getinvoicebyname(String name);
-    InvoiceDTO createinvoice(InvoiceDTO invoiceDTO);
+    InvoiceDTO createinvoiceandmail(InvoiceDTO invoiceDTO);
 
 }

@@ -4,16 +4,28 @@ import java.util.List;
 
 public class InvoiceDTO {
 
+    private long Id;
+
     private String Name;
     private String Email;
 
     private List<ItemDTO> items;
 
     public InvoiceDTO() {}
-    public InvoiceDTO(String name, String email, List<ItemDTO> items) {
+    public InvoiceDTO(long id,String name, String email, List<ItemDTO> items) {
         Name = name;
         Email = email;
+        this.Id = id;
         this.items = items;
+
+    }
+
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long id) {
+        this.Id = id;
     }
 
     public String getName() {

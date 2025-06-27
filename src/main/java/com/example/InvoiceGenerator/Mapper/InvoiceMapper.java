@@ -1,13 +1,14 @@
 package com.example.InvoiceGenerator.Mapper;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.example.InvoiceGenerator.Dto.InvoiceDTO;
 import com.example.InvoiceGenerator.Dto.ItemDTO;
 import com.example.InvoiceGenerator.Entity.Invoice;
 import com.example.InvoiceGenerator.Entity.Item;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class InvoiceMapper {
@@ -20,12 +21,13 @@ public class InvoiceMapper {
                     .map(ItemMapper::toDTO)
                     .toList();
         }
-        return new InvoiceDTO(invoice.getName(), invoice.getEmail(), itemDTOS);
+        return new InvoiceDTO(invoice.getInvoiceId(),invoice.getName(), invoice.getEmail(), itemDTOS);
     }
 
     public Invoice toEntity(InvoiceDTO dto){
         if(dto ==null) return null;
         Invoice invoice = new Invoice();
+        invoice.setInvoiceId(dto.getId());
         invoice.setName(dto.getName());
         invoice.setEmail(dto.getEmail());
         if(dto.getItems()!=null){
